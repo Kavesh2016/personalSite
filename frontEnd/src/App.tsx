@@ -1,44 +1,48 @@
-import { useEffect, useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { getWeatherForecast } from './api/client'
-import type { WeatherForecast } from './types/weather'
-import './App.css'
+import { Button } from '@/components/ui/button'
 
 function App() {
-  const [forecast, setForecast] = useState<WeatherForecast[]>([])
-  const [error, setError] = useState<string | null>(null)
-  const [loading, setLoading] = useState(true)
-
-  useEffect(() => {
-    getWeatherForecast()
-      .then(setForecast)
-      .catch((err: unknown) =>
-        setError(err instanceof Error ? err.message : 'Unknown error'),
-      )
-      .finally(() => setLoading(false))
-  }, [])
+  const { data, isLoading, isError, error, refetch, isFetching } = useQuery({
+    queryKey: ['weatherForecast'],
+    queryFn: getWeatherForecast,
+  })
 
   return (
-    <main>
-      <h1>Weather Forecast</h1>
-      {loading && <p>Loading…</p>}
-      {error && <p role="alert">Failed to load forecast: {error}</p>}
-      {!loading && !error && (
-        <table>
+    <main className="mx-auto max-w-3xl p-8">
+      <div className="mb-6 flex items-center justify-between">
+        <h1 className="text-3xl font-bold tracking-tight">Weather Forecast</h1>
+        <Button onClick={() => refetch()} disabled={isFetching}>
+          {isFetching ? 'Refreshing…' : 'Refresh'}
+        </Button>
+      </div>
+
+      {isLoading && <p className="text-muted-foreground">Loading…</p>}
+
+      {isError && (
+        <p role="alert" className="text-destructive">
+          Failed to load forecast:{' '}
+          {error instanceof Error ? error.message : 'Unknown error'}
+        </p>
+      )}
+
+      {data && (
+        <table className="w-full border-collapse text-left">
           <thead>
-            <tr>
-              <th>Date</th>
-              <th>Temp. (°C)</th>
-              <th>Temp. (°F)</th>
-              <th>Summary</th>
+            <tr className="border-b">
+              <th className="py-2 pr-4 font-medium">Date</th>
+              <th className="py-2 pr-4 font-medium">Temp. (°C)</th>
+              <th className="py-2 pr-4 font-medium">Temp. (°F)</th>
+              <th className="py-2 font-medium">Summary</th>
             </tr>
           </thead>
           <tbody>
-            {forecast.map((item) => (
-              <tr key={item.date}>
-                <td>{item.date}</td>
-                <td>{item.temperatureC}</td>
-                <td>{item.temperatureF}</td>
-                <td>{item.summary}</td>
+            {data.map((item) => (
+              <tr key={item.date} className="border-b">
+                <td className="py-2 pr-4">{item.date}</td>
+                <td className="py-2 pr-4">{item.temperatureC}</td>
+                <td className="py-2 pr-4">{item.temperatureF}</td>
+                <td className="py-2">{item.summary}</td>
               </tr>
             ))}
           </tbody>
