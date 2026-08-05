@@ -9,7 +9,7 @@ function Home() {
   })
 
   return (
-    <main className="mx-auto max-w-3xl p-8">
+    <>
       <div className="mb-6 flex items-center justify-between">
         <h1 className="text-3xl font-bold tracking-tight">Weather Forecast</h1>
         <Button onClick={() => refetch()} disabled={isFetching}>
@@ -48,7 +48,7 @@ function Home() {
           </tbody>
         </table>
       )}
-    </main>
+    </>
   )
 }
 

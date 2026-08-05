@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom'
 import { cn } from '@/lib/utils'
+import { Page } from '@/components/Page'
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -20,7 +21,7 @@ export function NavBar() {
 
   return (
     <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
-      <div className="mx-auto flex max-w-3xl items-center px-8 py-2">
+      <Page as="div" className="flex items-center py-2">
         <NavigationMenu>
           <NavigationMenuList>
             {links.map(({ to, label }) => {
@@ -39,7 +40,7 @@ export function NavBar() {
             })}
           </NavigationMenuList>
         </NavigationMenu>
-      </div>
+      </Page>
     </header>
   )
 }
