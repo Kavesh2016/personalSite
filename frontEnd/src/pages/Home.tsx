@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { getWeatherForecast } from '@/api/client'
 import { Button } from '@/components/ui/button'
+import { PageHeading } from '@/components/Typography'
 
 function Home() {
   const { data, isLoading, isError, error, refetch, isFetching } = useQuery({
@@ -11,7 +12,7 @@ function Home() {
   return (
     <>
       <div className="mb-6 flex items-center justify-between">
-        <h1 className="text-3xl font-bold tracking-tight">Weather Forecast</h1>
+        <PageHeading className="mb-0">Weather Forecast</PageHeading>
         <Button onClick={() => refetch()} disabled={isFetching}>
           {isFetching ? 'Refreshing…' : 'Refresh'}
         </Button>
